@@ -1,0 +1,13 @@
+{
+  "name": "maka-yange",
+  "version": "1.0.0",
+  "description": "USSD-based land claim registration system for Uganda",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  }
+}

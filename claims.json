@@ -1,0 +1,42 @@
+[
+  {
+    "claimCode": "MAKA-20260529-5395",
+    "farmerPhone": "+256702333679",
+    "timestamp": "2026-05-29T13:37:23.908Z",
+    "location": "gulu",
+    "witness1": "0702333678",
+    "witness2": "0707409200",
+    "witness1Response": "pending",
+    "witness2Response": "pending"
+  },
+  {
+    "claimCode": "MAKA-20260529-3530",
+    "farmerPhone": "+256702333679",
+    "timestamp": "2026-05-29T13:45:50.229Z",
+    "location": "mukono",
+    "witness1": "0766889954",
+    "witness2": "0788994455",
+    "witness1Response": "pending",
+    "witness2Response": "pending"
+  },
+  {
+    "claimCode": "MAKA-20260529-2718",
+    "farmerPhone": "+256702333679",
+    "timestamp": "2026-05-29T13:50:01.746Z",
+    "location": "soroti",
+    "witness1": "0799658736",
+    "witness2": "0799567843",
+    "witness1Response": "pending",
+    "witness2Response": "pending"
+  },
+  {
+    "claimCode": "MAKA-20260530-6550",
+    "farmerPhone": "+256702333679",
+    "timestamp": "2026-05-30T09:13:48.330Z",
+    "location": "tororo",
+    "witness1": "0788894546",
+    "witness2": "0799547864",
+    "witness1Response": "pending",
+    "witness2Response": "pending"
+  }
+]

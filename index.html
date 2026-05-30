@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maka Yange – Admin Panel</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; background: #f5f5f0; color: #222; }
+  header { background: #1a5c38; color: white; padding: 16px 28px; display: flex; align-items: center; gap: 14px; }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header span { font-size: 13px; opacity: 0.75; }
+  .stats { display: flex; gap: 16px; padding: 20px 28px; }
+  .stat { background: white; border-radius: 10px; padding: 16px 22px; flex: 1; border: 1px solid #e0e0d8; }
+  .stat .num { font-size: 28px; font-weight: 700; color: #1a5c38; }
+  .stat .label { font-size: 12px; color: #777; margin-top: 2px; }
+  .section { padding: 0 28px 28px; }
+  .section h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #333; }
+  table { width: 100%; background: white; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0d8; border-collapse: collapse; font-size: 13px; }
+  th { background: #f0f0e8; text-align: left; padding: 10px 14px; font-weight: 600; color: #444; border-bottom: 1px solid #e0e0d8; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0f0e8; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  .code { font-family: monospace; font-size: 12px; background: #f0f8f4; color: #1a5c38; padding: 2px 7px; border-radius: 4px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge.confirmed { background: #d4edda; color: #155724; }
+  .badge.denied    { background: #f8d7da; color: #721c24; }
+  .badge.pending   { background: #fff3cd; color: #856404; }
+  .refresh { margin-left: auto; background: #1a5c38; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .empty { text-align: center; padding: 40px; color: #999; font-size: 14px; }
+  .ts { font-size: 11px; color: #999; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Maka Yange &mdash; Admin Panel</h1>
+    <span>Land Claim Registry</span>
+  </div>
+  <button class="refresh" onclick="load()">&#8635; Refresh</button>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="total">0</div><div class="label">Total claims</div></div>
+  <div class="stat"><div class="num" id="confirmed">0</div><div class="label">Both witnesses confirmed</div></div>
+  <div class="stat"><div class="num" id="pending">0</div><div class="label">Awaiting witnesses</div></div>
+</div>
+
+<div class="section">
+  <h2>All land claims</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Claim code</th>
+        <th>Farmer phone</th>
+        <th>Location</th>
+        <th>Registered</th>
+        <th>Witness 1</th>
+        <th>Witness 2</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="6" class="empty">Loading claims...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function badge(status) {
+  return `<span class="badge ${status}">${status}</span>`;
+}
+
+function fmt(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-UG') + ' ' + d.toLocaleTimeString('en-UG', { hour: '2-digit', minute: '2-digit' });
+}
+
+async function load() {
+  const res = await fetch('/api/claims');
+  const claims = await res.json();
+
+  document.getElementById('total').textContent = claims.length;
+  document.getElementById('confirmed').textContent =
+    claims.filter(c => c.witness1Response === 'confirmed' && c.witness2Response === 'confirmed').length;
+  document.getElementById('pending').textContent =
+    claims.filter(c => c.witness1Response === 'pending' || c.witness2Response === 'pending').length;
+
+  const tbody = document.getElementById('tbody');
+  if (claims.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No claims yet. Use the USSD simulator to test.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = claims.slice().reverse().map(c => `
+    <tr>
+      <td><span class="code">${c.claimCode}</span></td>
+      <td>${c.farmerPhone}</td>
+      <td>${c.location}</td>
+      <td class="ts">${fmt(c.timestamp)}</td>
+      <td>${c.witness1}<br>${badge(c.witness1Response)}</td>
+      <td>${c.witness2}<br>${badge(c.witness2Response)}</td>
+    </tr>
+  `).join('');
+}
+
+load();
+setInterval(load, 10000);
+</script>
+</body>
+</html>
