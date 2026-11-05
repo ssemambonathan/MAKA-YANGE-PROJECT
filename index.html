@@ -28,6 +28,73 @@
   .refresh { margin-left: auto; background: #1a5c38; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; }
   .empty { text-align: center; padding: 40px; color: #999; font-size: 14px; }
   .ts { font-size: 11px; color: #999; }
+
+  @media (max-width: 700px) {
+    header {
+      padding: 14px 16px;
+    }
+
+    header h1 {
+      font-size: 17px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .section {
+      padding: 0 16px 20px;
+    }
+
+    table,
+    tbody,
+    tr,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    thead {
+      display: none;
+    }
+
+    tbody tr {
+      background: white;
+      border: 1px solid #e0e0d8;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    td {
+      display: grid;
+      grid-template-columns: minmax(110px, 35%) 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 10px 14px;
+      overflow-wrap: anywhere;
+    }
+
+    td::before {
+      content: attr(data-label);
+      color: #666;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    td.empty {
+      display: block;
+      text-align: center;
+      padding: 28px 16px;
+    }
+
+    td.empty::before {
+      content: none;
+    }
+  }
 </style>
 </head>
 <body>
@@ -92,12 +159,12 @@ async function load() {
 
   tbody.innerHTML = claims.slice().reverse().map(c => `
     <tr>
-      <td><span class="code">${c.claimCode}</span></td>
-      <td>${c.farmerPhone}</td>
-      <td>${c.location}</td>
-      <td class="ts">${fmt(c.timestamp)}</td>
-      <td>${c.witness1}<br>${badge(c.witness1Response)}</td>
-      <td>${c.witness2}<br>${badge(c.witness2Response)}</td>
+      <td data-label="Claim code"><span class="code">${c.claimCode}</span></td>
+      <td data-label="Farmer phone">${c.farmerPhone}</td>
+      <td data-label="Location">${c.location}</td>
+      <td data-label="Registered" class="ts">${fmt(c.timestamp)}</td>
+      <td data-label="Witness 1">${c.witness1}<br>${badge(c.witness1Response)}</td>
+      <td data-label="Witness 2">${c.witness2}<br>${badge(c.witness2Response)}</td>
     </tr>
   `).join('');
 }
